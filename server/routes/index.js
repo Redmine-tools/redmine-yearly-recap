@@ -29,14 +29,16 @@ const Feedback = sequelize.define('Feedback', {
 })
   
 const apicache = require('apicache')
-let cache = apicache.middleware
+let cache = apicache.options({
+    appendKey: (req, res) => req.get('X-Redmine-API-Key').slice(4, 12)
+}).middleware
 
 const onlyStatus200 = (req, res) => res.statusCode === 200
 
 // TODO: nem lenne jó kiemelni a Handler-eket típus szerint külön fájlba?
 
 // FIXME: docs
-routes.get('/api/redmine_url', async function(req, res) {
+routes.get('/api/redmine_url', cache('5 minutes', onlyStatus200), async function(req, res) {
     res.send(process.env.BASE_URL)
 })
 
@@ -88,7 +90,7 @@ routes.post('/api/login', jsonParser, async function(req, res) {
     })
 })
 
-routes.use('/api', async function(req, res) {
+routes.use('/api', cache('5 minutes', onlyStatus200), async function(req, res) {
     req.pipe(request(process.env.BASE_URL + req.url)).pipe(res);
 })
 
