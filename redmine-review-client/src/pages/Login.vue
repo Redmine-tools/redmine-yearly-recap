@@ -14,34 +14,6 @@
         @submit.prevent="getUser"
       >
         <div class="input-container">
-          <q-input
-            id="username"
-            v-model="username"
-            outlined
-            label="Felhasználónév"
-            name="username"
-            type="text"
-          />
-          <q-input
-            id="password"
-            v-model="password"
-            outlined
-            label="Jelszó"
-            name="password"
-            :type="isPwd ? 'password' : 'text'"
-            autocomplete="on"
-          >
-            <template #append>
-              <q-icon
-                :name="isPwd ? 'visibility_off' : 'visibility'"
-                class="cursor-pointer"
-                @click="isPwd = !isPwd"
-              />
-            </template>
-          </q-input>
-          <p class="separator">
-            vagy API kulccsal
-          </p>
           <p class="info">
             Apikulcs
             <button
