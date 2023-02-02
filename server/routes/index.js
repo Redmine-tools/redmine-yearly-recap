@@ -41,7 +41,8 @@ routes.get('/api/feedback/:id', jsonParser, async function(req, res) {
         where: {
             user: req.params.id
         }}).then((data) => {
-            res.send(data[0]?.isNewRecord)
+            console.log(data);
+            res.send(data?.length < 1)
         })
 })
 
