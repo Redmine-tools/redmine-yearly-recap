@@ -115,7 +115,7 @@ export default {
 
     async function getAPILink() {
       const response = await RedmineService.getRedmineUrl();
-      const apiKeyUrl = `${response.data}/my/account`;
+      const apiKeyUrl = `${response.data}/my/api_key`;
       window.open(apiKeyUrl);
     }
 
