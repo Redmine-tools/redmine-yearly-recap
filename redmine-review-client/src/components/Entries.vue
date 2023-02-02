@@ -28,17 +28,17 @@
     <div class="graphs-container">
       <div class="graph-container">
         <h3>Megmutatja, hogy melyik nap hány különböző jegyre rögzítettél órát</h3>
-        <apexchart height="380" type="bar" :options="options1" :series="series1"></apexchart>
+        <apexchart type="bar" height="100%" width="100%" :options="options1" :series="series1"></apexchart>
       </div>
 
       <div class="graph-container">
         <h3>Megmutatja, hogy melyik napra hány órát rögzítettél</h3>
-        <apexchart height="380" type="heatmap" :options="options2b" :series="series2b"></apexchart>
+        <apexchart type="heatmap" height="100%" width="100%" :options="options2b" :series="series2b"></apexchart>
       </div>
 
       <div class="graph-container">
         <h3>Megmutatja, hogy melyik projektre hány órát fordítottál</h3>
-        <apexchart width="480" type="pie" :options="options3" :series="series3"></apexchart>
+        <apexchart type="pie" height="100%" width="100%" :options="options3" :series="series3"></apexchart>
       </div>
 
       <div class="graph-container">
@@ -208,7 +208,9 @@ export default {
         id: 'data',
         toolbar: {
           show: false
-        }
+        },
+        height: '100%',
+        width: '100%',
       },
       xaxis: {
         categories: daysOfWeek
@@ -220,7 +222,9 @@ export default {
         id: 'data',
         toolbar: {
           show: false
-        }
+        },
+        height: '100%',
+        width: '100%',
       },
       xaxis: {
         categories: daysOfWeek
@@ -232,7 +236,9 @@ export default {
         id: 'data',
         toolbar: {
           show: false
-        }
+        },
+        height: '100%',
+        width: '100%',
       },
       plotOptions: {
         heatmap: {
@@ -293,18 +299,6 @@ export default {
         position: 'bottom'
       },
       labels: Object.keys(projectHours),
-      responsive: [{
-      breakpoint: 540,
-        options: {
-          chart: {
-            width: 200,
-            height: 560
-          },
-          legend: {
-            position: 'bottom'
-          }
-        }
-      }]
     })
 
     let series1 = ref([{

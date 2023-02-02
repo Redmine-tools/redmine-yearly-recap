@@ -1,6 +1,6 @@
 <template>
-  <article class="card">
-    <h3>Olvasd el, hogy mások mit írtak</h3>
+  <h3>Olvasd el, hogy mások mit írtak</h3>
+  <article>
     <div class="likes-container">
       <p>👍 Összesen {{ likes }} ember kedveli az alkalmazást</p>
       <p>👎 {{ dislikes }} embernek viszont nem tetszik</p>
@@ -27,11 +27,11 @@ export default {
     const texts = ref()
     let feedbacks
 
-    onMounted(() => FeedbackService.getFeedback().then(result => {
-      feedbacks = result.data
-      likes.value = (feedbacks.filter(i => i.like === 1)).length
-      dislikes.value = feedbacks.length - likes.value
-      texts.value = feedbacks.filter(i => i.feedback || i.feedback !== "")
+    onMounted(FeedbackService.getFeedback().then(result => {
+        feedbacks = result.data
+        likes.value = (feedbacks.filter(i => i.like === 1)).length
+        dislikes.value = feedbacks.length - likes.value
+        texts.value = feedbacks.filter(i => i.feedback || i.feedback !== "")
     }))
 
     return {
@@ -45,22 +45,10 @@ export default {
 
 
 <style lang="scss" scoped>
-.card {
-  padding: 12px;
-  border-radius: 12px;
-  margin-top: 12px;
-  backdrop-filter: blur(13px);
-  background: rgba(214, 214, 242, 0.95);
-  text-align: center;
-  height: fit-content;
-  width: 700px;
-}
-
 h3 {
   font-size: 1.75rem;
   line-height: 2rem;
   font-weight: 300;
-  margin-block-end: 0px;
 }
 
 article {
@@ -77,18 +65,6 @@ article {
     height: 250px;
     overflow-y: auto;
   }
-}
-
-.likes-container {
-  margin-block-start: 12px;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-}
-
-li {
-  text-align: left;
-  padding-block-end: 8px;
 }
 
 </style>

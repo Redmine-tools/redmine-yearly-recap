@@ -1,58 +1,57 @@
 <template>
-  <article class="card" >
-    <h3>Oszd meg velünk, hogy mit gondolsz</h3>
-    <form @submit.prevent="sendFeedback" v-if="!filled">
-      <q-input
-        v-model="text"
-        outlined
-        label="Viharjelzés"
-        type="textarea"
-        color="green"
-        required
+  <h3>Oszd meg velünk, hogy mit gondolsz</h3>
+  <form @submit.prevent="sendFeedback" v-if="!filled">
+    <q-input
+      v-model="text"
+      outlined
+      label="Viharjelzés"
+      type="textarea"
+      color="green"
+      required
+    />
+    <div class="like-buttons">
+      <q-btn-toggle
+        v-model="liked"
+        class="my-custom-toggle"
+        rounded
+        push
+        unelevated
+        toggle-color="green"
+        text-color="primary"
+        :options="[
+          {label: 'Tetszik 👍', value: '1'},
+          {label: 'Nem tetszik 👎', value: '0'}
+        ]"
       />
-      <div class="like-buttons">
-        <q-btn-toggle
-          v-model="liked"
-          class="my-custom-toggle"
-          rounded
-          push
-          unelevated
-          toggle-color="green"
-          text-color="primary"
-          :options="[
-            {label: 'Tetszik 👍', value: '1'},
-            {label: 'Nem tetszik 👎', value: '0'}
-          ]"
-        />
-      </div>
-      <button>Beküldés</button>
-      <p>Amint megosztod velünk, hogy mit gondolsz az oldalról itt látni fogod hogy mások mit írtak.</p>
-    </form>
-  </article>
+    </div>
+    <button>Beküldés</button>
+    <p>Amint megosztod velünk, hogy mit gondolsz az oldalról itt látni fogod hogy mások mit írtak.</p>
+  </form>
   <div v-bind:class="{ active: isActive }" class="toast">Köszönjük ❤</div>
 </template>
 
 <script>
-import { ref } from 'vue';
-import FeedbackService from '@/services/FeedbackService.js';
-import { useStore } from 'vuex';
+import { ref } from 'vue'
+import FeedbackService from '@/services/FeedbackService.js'
 
 export default {
   name: "Feedback",
   emits: ["feedbackRecived"],
-  setup(_, { emit }) {
-    const store = useStore();
+  props: {
+    userId: String
+  },
+  setup(props, { emit }) {
+    const id = ref(props.userId)
     const liked = ref(1)
     const text = ref('')
     const isActive = ref(false)
     const filled = ref(false)
-    const id = store.state.user.api_key;
     
     async function sendFeedback() {
       FeedbackService.sendFeedback({
         'feedback': text.value,
         'like': liked.value,
-        'user': id.slice(2, 10)
+        'user': id.value.slice(2, 10)
       }).then(() => {
         emit('feedbackRecived', true)
         isActive.value = true
@@ -60,6 +59,7 @@ export default {
         setTimeout(() => isActive.value = false, 2000)
       })
     }
+    //'user': id.value.slice(2, 10)
 
     return {
       liked,
@@ -74,16 +74,6 @@ export default {
 
 
 <style lang="scss" scoped>
-.card {
-  padding: 12px;
-  border-radius: 12px;
-  margin-top: 12px;
-  backdrop-filter: blur(13px);
-  background: rgba(214, 214, 242, 0.95);
-  text-align: center;
-  height: fit-content;
-}
-
 h3 {
   font-size: 1.75rem;
   line-height: 2rem;
@@ -91,9 +81,17 @@ h3 {
   margin-block-end: 0px;
 }
 
+.filled {
+    width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center; 
+}
+
 form {
   width: 100%;
-  height: 400px;
+  height: 100%;
   display: flex;
   flex-direction: column;
   justify-content: space-around;
@@ -138,6 +136,21 @@ form {
   }
 }
 
+@media screen and (max-width: 500px) {
+  form {
+    padding-inline: 12px;
+    button {
+      margin-inline: 0px;
+    }
+
+      .like-buttons {
+        button {
+          margin-inline: 10px;
+        }
+      }
+  }
+}
+
 .toast {
   position: fixed;
   left: calc(-50vw + 50%);
@@ -155,21 +168,6 @@ form {
   bottom: 30px;
   font-size: 17px;
   background-color: #084c61;
-}
-
-@media screen and (max-width: 500px) {
-  form {
-    padding-inline: 12px;
-    button {
-      margin-inline: 0px;
-    }
-
-      .like-buttons {
-        button {
-          margin-inline: 10px;
-        }
-      }
-  }
 }
 
 .active {
