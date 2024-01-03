@@ -12,7 +12,7 @@
 </template>
 
 <script>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import RedmineService from '@/services/RedmineService.js'
 import { useStore } from 'vuex';
 import VueApexCharts from "vue3-apexcharts"
@@ -24,11 +24,11 @@ export default {
   },
   setup() {
     const store = useStore();
-    const year = process.env.VUE_APP_YEAR;
-    const projectHours = store.state.issues.reduce((r,v) => {
+    const year = computed(() => parseInt(store.state.year, 10));
+    const projectHours = computed(() => store.state.issues.reduce((r,v) => {
       r[v.project.name] = (r[v.project.name] || 0) + v.hours; 
       return r;
-    }, {});
+    }, {}));
     const series = ref([
         {
           name: "rögzített órák száma",

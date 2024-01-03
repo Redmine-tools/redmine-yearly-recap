@@ -47,6 +47,13 @@
         </article>
         <Feedback @feedbackRecived="reciveFeedback" v-if="!gaveFeedback" />
         <Feedbacks v-if="gaveFeedback"></Feedbacks>
+        <div>year: {{ year }}</div>
+        <select v-model="year" @change=changeYear>
+          <option value=2023>2023</option>
+          <option value=2022>2022</option>
+          <option value=2021>2021</option>
+        </select>
+
       </div>
     </section>
 </div>
@@ -79,8 +86,8 @@ export default {
     const totalData = ref(0)
     const collectedData = ref(0)
     let loading = ref(true)
-    const year = process.env.VUE_APP_YEAR
     const store = useStore();
+    const year = ref(parseInt(store.state.year, 10));
     const gaveFeedback = ref(false)
     const userId = ref(store.state.user.api_key);
 
@@ -90,7 +97,7 @@ export default {
     }
 
     async function _getEntriesWithOffset(offset=0) {
-      const response = await RedmineService.getAllTimeEntries(store.state.user.api_key, offset)
+      const response = await RedmineService.getAllTimeEntries(store.state.user.api_key, offset, year.value)
       collectedData.value += response?.data?.time_entries.length
       return {
         time_entries: response?.data?.time_entries || [],
@@ -99,6 +106,10 @@ export default {
     }
 
     async function getEntries() {
+      loading.value = true
+      store.commit({
+        type: 'cleanIssues',
+      })
       const PAGE_SIZE = 100;
       const { time_entries: firstEntries, total_count } = await _getEntriesWithOffset();
       entries.value = [...firstEntries];
@@ -111,7 +122,21 @@ export default {
           entries.value = [...entries.value, ...currentEntries]
         }
       }
+      loading.value = false
     }
+
+    function changeYear() {
+      store.commit({
+        type: 'addYear',
+        payload: year.value
+      })
+      getEntries().then(() => {
+              store.commit({
+                type: 'addAllIssues',
+                payload: entries.value,
+              })})
+    }
+
 
     onMounted( async () => {
       getEntries().then(() => {
@@ -119,7 +144,6 @@ export default {
           type: 'addAllIssues',
           payload: entries.value,
         })
-        loading.value = false
       }).then(() => {
         FeedbackService.checkFeedback(userId.value.slice(2, 10)).then((response) => {
           if(!response.data) {
@@ -136,7 +160,8 @@ export default {
       loading,
       entries,
       gaveFeedback,
-      reciveFeedback
+      reciveFeedback,
+      changeYear
     };
   },
 };

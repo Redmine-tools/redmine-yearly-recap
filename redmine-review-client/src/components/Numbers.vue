@@ -23,12 +23,18 @@
         <p class="trophy"><b>{{ (hoursSum/store.state.issues.length).toFixed(2) }}</b></p>
         <p>órát rögzítettél egy jegyre</p>
       </div>
+
+      <div class="card">
+        <p>Átalgosan</p>
+        <p class="trophy"><b>{{ (avgDiff/store.state.issues.length).toFixed(2) }}</b></p>
+        <p>óra eltérés van a jegy létrehozása és frissítése között</p>
+      </div>
     </article>
   </section>
 </template>
 
 <script>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import RedmineService from '@/services/RedmineService.js'
 import { useStore } from 'vuex';
 
@@ -36,15 +42,27 @@ export default {
   name: 'Numbers',
   setup() {
     const store = useStore();
-    const hoursSum = ref(store.state.issues.reduce((acc, obj) => {
+    const hoursSum = store.state.issues.reduce((acc, obj) => {
       return acc + obj.hours
-    }, 0))
-    const year = process.env.VUE_APP_YEAR
+    }, 0)
+    const year = parseInt(store.state.year, 10);
+
+    function dateDiffInHours(a, b) {
+      const _MS_PER_DAY = 1000 * 60 * 60 * 24;
+      const firstDate = new Date(a)
+      const secondDate = new Date(b)
+      return Math.abs(firstDate.getTime() - secondDate.getTime()) / 3600000;
+    }
+    
+    const avgDiff = store.state.issues.reduce((acc, obj) => {
+      return acc + dateDiffInHours(obj.created_on, obj.updated_on)
+    }, 0)
 
     return {
       store,
       hoursSum,
-      year
+      year,
+      avgDiff
     };
   },
 };

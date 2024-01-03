@@ -12,6 +12,7 @@ const store = createStore({
   state: {
     user: {},
     issues: [],
+    year: null
   },
   mutations: {
     addUser(state, payload) {
@@ -25,6 +26,12 @@ const store = createStore({
       Object.keys(s).forEach(key => {
         state[key] = s[key];
       });
+    },
+    cleanIssues(state) {
+      state.issues = []
+    },
+    addYear(state, payload) {
+      state.year = payload.payload
     }
   },
   plugins: [

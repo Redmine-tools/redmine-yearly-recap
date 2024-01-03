@@ -24,7 +24,7 @@ export default {
   },
   setup() {
     const store = useStore();
-    const year = process.env.VUE_APP_YEAR;
+    const year = parseInt(store.state.year, 10);
     const timeEntries = store.state.issues;
 
     function aggregateData(array) {
