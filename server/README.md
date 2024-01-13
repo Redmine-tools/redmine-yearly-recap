@@ -10,7 +10,7 @@ This project serves as a backend proxy for a Redmine based application. The fron
   - BASE_URL
   - NODE_LOGGING_LEVEL
 
-### example *.env* file
+### example .env file
 ```
 PORT=3000
 BASE_URL=http://redmine-url.com

@@ -16,34 +16,34 @@
   <div v-else class="scroller">
       <section class="dark container">
       <div class="spacer layer1">
-        <Numbers />
+        <Numbers :issues="entries" />
       </div>
     </section>
     
     <section class="dark container">
       <div class="spacer layer2">
-        <Projects />
+        <Projects :issues="entries" />
       </div>
     </section>
     
 
     <section class="dark container">
       <div class="spacer layer3">
-        <Issues />
+        <Issues :issues="entries" />
       </div>
     </section>
 
     <section class="dark container">
       <div class="spacer layer4">
-        <Days />
+        <Days :issues="entries" />
       </div>
     </section>
 
     <section class="dark container">
       <div class="spacer layer5">
         <article class="feedback-texts">
-          <p class="text">"Gyengeségeidből okulhatsz a legtöbbet. És meglásd, többé nem fognak uralkodni rajtad. Ehelyett te fogod uralni azokat."</p>
-          <p class="author">Yoda</p>
+          <p class="text">{{ quote[parseInt(store.state.year, 10)] }}</p>
+          <p class="author">{{ writer[parseInt(store.state.year, 10)] }}</p>
         </article>
         <Feedback @feedbackRecived="reciveFeedback" v-if="!gaveFeedback" />
         <Feedbacks v-if="gaveFeedback"></Feedbacks>
@@ -153,6 +153,17 @@ export default {
       })
     })
 
+    const quote = ref({
+      2023: "Nem kell mindenre odafigyelni, amit hall az ember.",
+      2022: "Gyengeségeidből okulhatsz a legtöbbet. És meglásd, többé nem fognak uralkodni rajtad. Ehelyett te fogod uralni azokat.",
+      2021: "Gyengeségeidből okulhatsz a legtöbbet. És meglásd, többé nem fognak uralkodni rajtad. Ehelyett te fogod uralni azokat."
+    })
+    const writer = ref({
+      2023: "Tata - A Gyűrű szövetsége",
+      2022: "Yoda",
+      2021: "Yoda"
+    })
+
     return {
       year,
       totalData,
@@ -161,7 +172,10 @@ export default {
       entries,
       gaveFeedback,
       reciveFeedback,
-      changeYear
+      changeYear,
+      quote,
+      writer,
+      store
     };
   },
 };

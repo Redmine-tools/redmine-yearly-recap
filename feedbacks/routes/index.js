@@ -2,7 +2,6 @@ require('dotenv').config()
 const bodyParser = require('body-parser')
 const jsonParser = bodyParser.json()
 const routes = require('express').Router()
-const sqlite3 = require('sqlite3')
 const { Sequelize, DataTypes } = require('sequelize');
 
 const sequelize = new Sequelize({

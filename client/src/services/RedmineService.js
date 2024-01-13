@@ -1,29 +1,29 @@
-import Api from '@/services/Api'
+import { proxy } from "@/services/Api";
 
 export default {
   getUser(apiKey) {
-    return Api().get("users/current.json", this.getConfigWithApiKey(apiKey));
+    return proxy.get("users/current.json", this.getConfigWithApiKey(apiKey));
   },
   getIssues(apiKey, issueId) {
-    return Api().get(
+    return proxy.get(
       `issues.json?issue_id=${issueId}`,
       this.getConfigWithApiKey(apiKey)
     );
   },
   getAllUpdatedIssues(apiKey, offset) {
-    return Api().get(
+    return proxy.get(
       `issues.json?updated_by=me&updated_on=><${process.env.VUE_APP_YEAR}-01-01|${process.env.VUE_APP_YEAR}-12-31&limit=100&status_id=*&offset=${offset}`,
       this.getConfigWithApiKey(apiKey)
     );
   },
   getAllTimeEntries(apiKey, offset, year) {
-    return Api().get(
+    return proxy.get(
       `time_entries.json?user_id=me&limit=100&from=${year}-01-01&to=${year}-12-31&offset=${offset}`,
       this.getConfigWithApiKey(apiKey)
     );
   },
   getRedmineUrl() {
-    return Api().get("redmine_url");
+    return proxy.get("redmine_url");
   },
   getConfigWithApiKey: function(apiKey) {
     return {
@@ -33,6 +33,6 @@ export default {
     };
   },
   getUserByPassword(user) {
-    return Api().post("login", user);
+    return proxy.post("login", user);
   }
 };

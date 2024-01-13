@@ -5,8 +5,8 @@
     </article>
     <article class="heading">
       <h4>Megmutatja, hogy melyik napra hány órát rögzítettél</h4>
-      <p class="text">"Remélem is, parancsnok, az Ön érdekében. Az Uralkodó ugyanis nem oly elnéző mint én."</p>
-      <p class="author">Darth Vader</p>
+      <p class="text">{{ quote[parseInt(store.state.year, 10)] }}</p>
+      <p class="author">{{ writer[parseInt(store.state.year, 10)] }}</p>
     </article>
   </section>
 </template>
@@ -19,13 +19,14 @@ import VueApexCharts from "vue3-apexcharts"
 
 export default {
   name: 'Days',
+  props: ['issues'],
   components: {
     apexchart: VueApexCharts,
   },
-  setup() {
+  setup(props) {
     const store = useStore();
     const year = parseInt(store.state.year, 10);
-    const timeEntries = store.state.issues;
+    const timeEntries = props.issues;
 
     function aggregateData(array) {
       return array.reduce((acc, value) => ({
@@ -162,11 +163,24 @@ export default {
       }
     })
 
+    const quote = ref({
+      2023: "Sem az erő, sem a jó szándék nem tart örökké.",
+      2022: "Remélem is, parancsnok, az Ön érdekében. Az Uralkodó ugyanis nem oly elnéző mint én.",
+      2021: "Remélem is, parancsnok, az Ön érdekében. Az Uralkodó ugyanis nem oly elnéző mint én."
+    })
+    const writer = ref({
+      2023: "Gandalf - A Gyűrű szövetsége",
+      2022: "Darth Vader",
+      2021: "Darth Vader"
+    })
+
     return {
       store,
       series,
       options,
-      year
+      year,
+      quote,
+      writer
     };
   },
 };

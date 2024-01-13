@@ -1,0 +1,40 @@
+version: '3'
+services:
+  client:
+    build: 
+      context: ./client
+      dockerfile: Dockerfile
+      args:
+        - VUE_APP_BACKEND_URL=http://localhost:3000/api
+        - VUE_APP_FEEDBACK_URL=http://localhost:3001/feedback
+        - VUE_APP_YEAR=2023
+    ports: 
+      - "8080:80"
+    volumes:
+      - /app/node_modules
+      - ./client:/app
+  server:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    volumes:
+      - /app/node_modules
+      - ./server:/app
+    environment:
+      - BASE_URL=https://agile.tigra.hu/
+      - PORT=3000
+    ports: 
+      - 3000:3000
+    restart: always
+  feedbacks:
+    build:
+      context: ./feedbacks
+      dockerfile: Dockerfile
+    volumes:
+      - /app/node_modules
+      - ./feedbacks:/app
+    environment:
+      - PORT=3001
+    ports: 
+      - 3001:3001
+    restart: always

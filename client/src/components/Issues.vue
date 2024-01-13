@@ -2,8 +2,8 @@
   <section class="issues-section">
     <article class="heading">
       <h4>Megmutatja, hogy melyik nap hány különböző jegyre rögzítettél órát</h4>
-      <p class="text">"Ne feledd! Amire figyelsz, az a világod."</p>
-      <p class="author">Qui-Gon Jinn</p>
+      <p class="text">{{ quote[parseInt(store.state.year, 10)] }}</p>
+      <p class="author">{{ writer[parseInt(store.state.year, 10)] }}</p>
     </article>
     <article class="card">
       <apexchart height="380" width="700" type="bar" :options="options" :series="series"></apexchart>
@@ -19,10 +19,11 @@ import VueApexCharts from "vue3-apexcharts";
 
 export default {
   name: 'Issues',
+  props: ['issues'],
   components: {
     apexchart: VueApexCharts,
   },
-  setup() {
+  setup(props) {
     const store = useStore();
     const year = parseInt(store.state.year, 10);
 
@@ -37,7 +38,7 @@ export default {
       return new Date(date).toLocaleString('hu-HU', {weekday:'long'})
     }
     
-    const timeEntriesDays = aggregateData(store.state.issues.map(entrie => entrie.spent_on))
+    const timeEntriesDays = aggregateData(props.issues.map(entrie => entrie.spent_on))
 
     const magic = Object.entries(timeEntriesDays).reduce((acc, value) => ({
       ...acc,
@@ -77,11 +78,24 @@ export default {
       data: finalAvgDayEntri
     }])
 
+    const quote = ref({
+      2023: "Az út, amelyet kinek-kinek követnie kell, már ott húzódik a lába előtt, csak látni nem látja.",
+      2022: "Ne feledd! Amire figyelsz, az a világod.",
+      2021: "Ne feledd! Amire figyelsz, az a világod."
+    })
+    const writer = ref({
+      2023: "Galadriel - A Gyűrű szövetsége",
+      2022: "Qui-Gon Jinn",
+      2021: "Qui-Gon Jinn"
+    })
+
     return {
       store,
       series,
       options,
-      year
+      year,
+      quote,
+      writer
     };
   },
 };

@@ -2,10 +2,10 @@
   "name": "feedbacks",
   "version": "1.0.0",
   "description": "",
-  "main": "main.js",
+  "main": "index.js",
   "scripts": {
-    "start": "node main.js",
-    "start:local": "nodemon main.js"
+    "start": "node index.js",
+    "start:local": "nodemon index.js"
   },
   "repository": {
     "type": "git",

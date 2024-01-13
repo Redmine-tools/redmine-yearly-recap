@@ -5,8 +5,8 @@
     </article>
     <article class="heading">
       <h4>Megmutatja, hogy melyik projektre hány órát fordítottál</h4>
-      <p class="text">"Mi ketten közös erővel véget vethetünk ennek a pusztító háborúskodásnak. És rendet teremtünk a galaxisban."</p>
-      <p class="author">Darth Vader</p>    
+      <p class="text">{{ quote[parseInt(store.state.year, 10)] }}</p>
+      <p class="author">{{ writer[parseInt(store.state.year, 10)] }}</p>
     </article>
   </section>
 </template>
@@ -19,20 +19,21 @@ import VueApexCharts from "vue3-apexcharts"
 
 export default {
   name: 'Projects',
+  props: ['issues'],
   components: {
     apexchart: VueApexCharts,
   },
-  setup() {
+  setup(props) {
     const store = useStore();
     const year = computed(() => parseInt(store.state.year, 10));
-    const projectHours = computed(() => store.state.issues.reduce((r,v) => {
+    const projectHours = computed(() => props.issues.reduce((r,v) => {
       r[v.project.name] = (r[v.project.name] || 0) + v.hours; 
       return r;
     }, {}));
     const series = ref([
         {
           name: "rögzített órák száma",
-          data: Object.values(projectHours),
+          data: Object.values(projectHours.value),
         },
       ])
 
@@ -58,7 +59,7 @@ export default {
           fontSize: "14px",
         }
       },
-      labels: Object.keys(projectHours),
+      labels: Object.keys(projectHours.value),
       responsive: [{
       breakpoint: 540,
         options: {
@@ -73,11 +74,24 @@ export default {
       }]
     })
 
+    const quote = ref({
+      2023: "Vesd el a sajnálkozást és a félelmet! Tedd azt, amit éppen tenned kell.",
+      2022: "Mi ketten közös erővel véget vethetünk ennek a pusztító háborúskodásnak. És rendet teremtünk a galaxisban.",
+      2021: "Mi ketten közös erővel véget vethetünk ennek a pusztító háborúskodásnak. És rendet teremtünk a galaxisban."
+    })
+    const writer = ref({
+      2023: "Gandalf - A két torony",
+      2022: "Darth Vader",
+      2021: "Darth Vader"
+    })
+
     return {
       store,
       series,
       options,
-      year
+      year,
+      quote,
+      writer
     };
   },
 };

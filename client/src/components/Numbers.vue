@@ -2,8 +2,8 @@
   <section class="numbers-section">
     <article class="heading">
       <h2>{{ year }} Redmine összefoglaló</h2>
-      <p class="text">"Tedd, vagy ne tedd, de ne próbáld!"</p>
-      <p class="author">Yoda</p>
+      <p class="text">{{ quote[parseInt(store.state.year, 10)] }}</p>
+      <p class="author">{{ writer[parseInt(store.state.year, 10)] }}</p>
     </article>
     <article class="cards-conatiner">
       <div class="card">
@@ -40,12 +40,23 @@ import { useStore } from 'vuex';
 
 export default {
   name: 'Numbers',
-  setup() {
+  props: ['issues'],
+  setup(props) {
     const store = useStore();
-    const hoursSum = store.state.issues.reduce((acc, obj) => {
+    const hoursSum = props.issues.reduce((acc, obj) => {
       return acc + obj.hours
     }, 0)
     const year = parseInt(store.state.year, 10);
+    const quote = ref({
+      2023: "A tükör kéretlenül is sok mindent megmutat, s az gyakran hasznosabb, mint amit látni szeretnétek.",
+      2022: "Tedd, vagy ne tedd, de ne próbáld!",
+      2021: "Tedd, vagy ne tedd, de ne próbáld!"
+    })
+    const writer = ref({
+      2023: "Galadriel - A Gyűrű szövetsége",
+      2022: "Yoda",
+      2021: "Yoda"
+    })
 
     function dateDiffInHours(a, b) {
       const _MS_PER_DAY = 1000 * 60 * 60 * 24;
@@ -54,7 +65,7 @@ export default {
       return Math.abs(firstDate.getTime() - secondDate.getTime()) / 3600000;
     }
     
-    const avgDiff = store.state.issues.reduce((acc, obj) => {
+    const avgDiff = props.issues.reduce((acc, obj) => {
       return acc + dateDiffInHours(obj.created_on, obj.updated_on)
     }, 0)
 
@@ -62,7 +73,9 @@ export default {
       store,
       hoursSum,
       year,
-      avgDiff
+      avgDiff,
+      quote,
+      writer
     };
   },
 };
