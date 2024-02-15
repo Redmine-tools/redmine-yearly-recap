@@ -12,7 +12,7 @@ const store = createStore({
   state: {
     user: {},
     issues: [],
-    year: null
+    year: process.env.VUE_APP_YEAR
   },
   mutations: {
     addUser(state, payload) {

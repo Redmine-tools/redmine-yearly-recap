@@ -97,9 +97,6 @@ export default {
     }
 
     async function _getEntriesWithOffset(offset=0) {
-      if(!year.value) {
-        year.value = process.env.VUE_APP_YEAR
-      }
       const response = await RedmineService.getAllTimeEntries(store.state.user.api_key, offset, year.value)
       collectedData.value += response?.data?.time_entries.length
       return {
